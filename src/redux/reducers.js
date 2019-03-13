@@ -23,7 +23,7 @@ const defaultState = {
       id: "81x83ysiEHsHCBoeVh2O",
       title: "글씨가 주는 소소한 행복, Lettering Together!",
       coverImage:
-        "https://cdn.class101.net/images/ec0f0c15-aeec-43a3-a0c9-b649b0999f0a",
+        "https://cdn.class101.net/images/ec0f0c15-aeec-43a3-a0c9-b649b0999f 0a",
       price: 320000,
       score: 300
     },

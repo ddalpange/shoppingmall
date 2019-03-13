@@ -1,7 +1,15 @@
 import React from "react";
 
-const WishItem = ({ item, selected, onSelect, onUnselect }) => {
-  const { coverImage, title, price, id, availableCoupon } = item;
+const WishItem = ({ item, onChangeCount, onChangeSelected, index }) => {
+  const {
+    coverImage,
+    title,
+    price,
+    id,
+    selected,
+    count,
+    availableCoupon
+  } = item;
   return (
     <div className="card columns" style={{ marginBottom: "48px" }}>
       <div className="column is-paddingless">
@@ -20,10 +28,17 @@ const WishItem = ({ item, selected, onSelect, onUnselect }) => {
             type="checkbox"
             className="checkbox"
             checked={selected}
-            value={selected}
-            onChange={() => (selected ? onUnselect(id) : onSelect(id))}
+            onChange={$event => onChangeSelected(index, $event.target.checked)}
           />
           &nbsp; 선택하기
+        </label>
+        <label>
+          <input
+            type="number"
+            className="input"
+            value={count}
+            onChange={$event => onChangeCount(index, $event.target.value)}
+          />
         </label>
       </div>
     </div>

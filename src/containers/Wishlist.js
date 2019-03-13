@@ -8,47 +8,44 @@ class Wishlist extends Component {
   }
 
   state = {
-    selectedIdMaps: {},
+    wishlist: [],
     selectedCoupon: null
   };
 
   componentWillMount() {
     this.setState({
-      selectedIdMaps: this.props.wishlist.reduce((result, item) => {
-        result[item.id] = true;
-        return result;
-      }, {})
+      wishlist: this.props.wishlist.map(item => ({
+        ...item,
+        selected: true,
+        count: 1
+      }))
     });
   }
 
-  onSelect(id) {
-    this.setState({
-      selectedIdMaps: {
-        ...this.state.selectedIdMaps,
-        [id]: true
-      }
-    });
+  onChangeSelected(index, value) {
+    const wishlist = [...this.state.wishlist];
+    console.log(index, value);
+    wishlist[index].selected = value;
+    this.setState({ wishlist });
   }
 
-  onUnselect(id) {
-    this.setState({
-      selectedIdMaps: {
-        ...this.state.selectedIdMaps,
-        [id]: false
-      }
-    });
+  onChangeCount(index, value) {
+    const wishlist = [...this.state.wishlist];
+    wishlist[index].count = value;
+    this.setState({ wishlist });
   }
 
   get amount() {
-    const { wishlist } = this.props;
-    const { selectedIdMaps, selectedCoupon } = this.state;
-    const selectedProducts = wishlist.filter(item => selectedIdMaps[item.id]);
+    const { selectedCoupon, wishlist } = this.state;
+
+    const selectedProducts = wishlist.filter(item => item.selected);
+
     const discountableProducts = selectedProducts.filter(
       item => item.availableCoupon !== false
     );
 
     const total = selectedProducts.reduce(
-      (result, item) => result + item.price,
+      (result, item) => result + item.price * item.count,
       0
     );
 
@@ -56,7 +53,7 @@ class Wishlist extends Component {
 
     if (selectedCoupon) {
       const totalAvailableCouponAmount = discountableProducts.reduce(
-        (result, item) => result + item.price,
+        (result, item) => result + item.price * item.count,
         0
       );
 
@@ -82,13 +79,15 @@ class Wishlist extends Component {
       <section className="section">
         <div className="container">
           <h1 className="title">장바구니</h1>
-          {this.props.wishlist.map(item => (
+          {this.state.wishlist.map((item, i) => (
             <WishItem
               item={item}
               key={item.id}
-              selected={this.state.selectedIdMaps[item.id]}
-              onSelect={id => this.onSelect(id)}
-              onUnselect={id => this.onUnselect(id)}
+              index={i}
+              onChangeSelected={(index, value) =>
+                this.onChangeSelected(index, value)
+              }
+              onChangeCount={(index, value) => this.onChangeCount(index, value)}
             />
           ))}
           <div className="card">
